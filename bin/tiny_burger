@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+path = ARGV[0]
+
+buffer = ""
+input = ""
+File.open(path, "r").read.each_line do |line|
+  if line.start_with?("===") && input != "q"
+    system("clear")
+    puts buffer
+
+    `rm ./work.rb`
+    File.open("./work.rb", "w") {|f| f.write(buffer)}
+
+    result = `cat ./work.rb | pygmentize -l ruby -f rtf`
+
+    # Bump up the font size in rtf output
+    result.gsub!("\\f0", "\\f0\\fs60")
+
+    File.open("./work.rtf", "w") {|f| f.write(result)}
+    `cat ./work.rtf | pbcopy -prefer rtf`
+
+    buffer = ""
+
+    system("stty raw -echo") #=> Raw mode, no echo
+    input = $stdin.getc
+    system("stty -raw echo") #=> Reset terminal mode
+  else
+    buffer += line
+  end
+end
