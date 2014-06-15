@@ -5,7 +5,7 @@ path = ARGV[0]
 buffer = ""
 input = ""
 File.open(path, "r").read.each_line do |line|
-  if line.start_with?("===") && input != "q"
+  if line.start_with?("===") && input != "q" && input != "\u0003"
     system("clear")
     puts buffer
 
