@@ -16,6 +16,7 @@ File.open(path, "r").read.each_line do |line|
 
     # Bump up the font size in rtf output
     result.gsub!("\\f0", "\\f0\\fs60")
+    result.chomp!
 
     File.open("./work.rtf", "w") {|f| f.write(result)}
     `cat ./work.rtf | pbcopy -prefer rtf`
