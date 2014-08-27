@@ -6,13 +6,16 @@ buffer = ""
 input = ""
 File.open(path, "r").read.each_line do |line|
   if line.start_with?("===") && input != "q" && input != "\u0003"
+    content_type = line.match(/[=]+(.*)/)[1]
+    content_type = "ruby" if content_type.empty?
+
     system("clear")
     puts buffer
 
     `rm ./work.rb`
     File.open("./work.rb", "w") {|f| f.write(buffer)}
 
-    result = `cat ./work.rb | pygmentize -l ruby -f rtf`
+    result = `cat ./work.rb | pygmentize -l #{content_type} -f rtf -O encoding=utf8`
 
     # Bump up the font size in rtf output
     result.gsub!("\\f0", "\\f0\\fs60")
